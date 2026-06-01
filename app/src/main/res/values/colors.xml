@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="gate_bg">#080C14</color>
+    <color name="gate_cyan">#00D4FF</color>
+    <color name="gate_muted">#6B7F99</color>
+</resources>

@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GATE Wallpaper App — Build Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #080c14;
+    --surface: #0e1520;
+    --surface2: #131c2a;
+    --border: #1e2d42;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #7c3aed;
+    --text: #e2eaf5;
+    --muted: #6b7f99;
+    --green: #00e5a0;
+    --yellow: #ffd60a;
+    --code-bg: #0a1628;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* animated background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+  }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    margin-bottom: 70px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent3), var(--accent));
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 6px 16px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(32px, 6vw, 56px);
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+
+  h1 span.cyan { color: var(--accent); }
+  h1 span.orange { color: var(--accent2); }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* COUNTDOWN PILL */
+  .countdown-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 10px 20px;
+    margin-top: 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  .pill-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* PHASE SECTIONS */
+  .phase {
+    margin-bottom: 52px;
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .phase-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .phase-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--text);
+  }
+
+  .phase-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* STEP CARDS */
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .step:hover { border-color: rgba(0,212,255,0.3); }
+
+  .step-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 24px;
+  }
+
+  .step-icon {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-icon.blue { background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2); }
+  .step-icon.orange { background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.2); }
+  .step-icon.purple { background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2); }
+  .step-icon.green { background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.2); }
+  .step-icon.yellow { background: rgba(255,214,10,0.1); border: 1px solid rgba(255,214,10,0.2); }
+
+  .step-content { flex: 1; }
+
+  .step-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+
+  .step-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .step-desc strong { color: var(--text); font-weight: 500; }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: var(--code-bg);
+    border-top: 1px solid var(--border);
+    padding: 18px 24px;
+    position: relative;
+  }
+
+  .code-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: #a8c8f0;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .kw { color: #c792ea; }
+  .str { color: #c3e88d; }
+  .cm { color: #546e7a; font-style: italic; }
+  .fn { color: #82aaff; }
+  .num { color: #f78c6c; }
+  .tag { color: var(--accent); }
+  .attr { color: #ffcb6b; }
+
+  /* SUBSTEPS */
+  .substeps {
+    padding: 0 24px 20px 76px;
+  }
+
+  .substep {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 13.5px;
+    color: var(--muted);
+    align-items: flex-start;
+  }
+
+  .substep::before {
+    content: '→';
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .substep strong { color: var(--text); }
+
+  /* ALERT BOXES */
+  .alert {
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 13.5px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+
+  .alert.info { background: rgba(0,212,255,0.07); border: 1px solid rgba(0,212,255,0.2); color: #a0d4ea; }
+  .alert.warn { background: rgba(255,214,10,0.07); border: 1px solid rgba(255,214,10,0.2); color: #e0c870; }
+  .alert.success { background: rgba(0,229,160,0.07); border: 1px solid rgba(0,229,160,0.2); color: #70d4b0; }
+
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* SUMMARY TABLE */
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin-top: 8px;
+  }
+
+  .summary-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .summary-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(30,45,66,0.5);
+    color: var(--muted);
+  }
+
+  .summary-table td:first-child { color: var(--text); font-weight: 500; }
+
+  .tag-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .tag-pill.free { background: rgba(0,229,160,0.1); color: var(--green); border: 1px solid rgba(0,229,160,0.2); }
+  .tag-pill.easy { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
+
+  /* FINAL FLOW */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+    margin: 24px 0;
+  }
+
+  .flow-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 18px;
+    font-size: 13px;
+    text-align: center;
+    min-width: 110px;
+  }
+
+  .flow-box .fb-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+  .flow-box .fb-label { color: var(--muted); font-size: 11px; }
+
+  .flow-arrow {
+    color: var(--accent);
+    font-size: 18px;
+    padding: 0 8px;
+    flex-shrink: 0;
+  }
+
+  /* SECTION DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 60px 0;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+  }
+
+  footer span { color: var(--accent2); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <div class="badge">Complete Build Guide · Android App</div>
+    <h1>
+      GATE Countdown<br/>
+      <span class="cyan">Wallpaper</span> <span class="orange">App</span>
+    </h1>
+    <p class="subtitle">Step-by-step guide to build an Android app that auto-generates & sets an AI wallpaper with your GATE exam countdown — every single day.</p>
+    <div class="countdown-pill">
+      <div class="pill-dot"></div>
+      <span id="days-live">Calculating...</span> days remaining to GATE 2026 · Feb 1, 2027
+    </div>
+  </header>
+
+  <!-- HOW IT WORKS FLOW -->
+  <div class="flow">
+    <div class="flow-box"><span class="fb-icon">⏰</span>Midnight<div class="fb-label">Triggers daily</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box"><span class="fb-icon">🧮</span>Count Days<div class="fb-label">To GATE date</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box"><span class="fb-icon">🤖</span>AI Image<div class="fb-label">Together AI</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box"><span class="fb-icon">✏️</span>Overlay Text<div class="fb-label">Draw on bitmap</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box"><span class="fb-icon">📱</span>Set Wallpaper<div class="fb-label">Automatically</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- PHASE 1 -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">Phase 01</div>
+      <div class="phase-title">Setup Your Tools</div>
+      <div class="phase-line"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-top">
+        <div class="step-icon blue">💻</div>
+        <div class="step-content">
+          <div class="step-title">Step 1 — Install Android Studio</div>
+          <div class="step-desc">This is your main coding software. It's free and official from Google.</div>
+        </div>
+      </div>
+      <div class="substeps">
+        <div class="substep">Go to <strong>developer.android.com/studio</strong> → click Download</div>
+        <div class="substep">Run the installer → keep all default settings → click Next until done</div>
+        <div class="substep">Open Android Studio → click <strong>"New Project"</strong></div>
+        <div class="substep">Choose template: <strong>Empty Activity</strong></div>
+        <div class="substep">Name: <strong>GATEWallpaper</strong> | Language: <strong>Kotlin</strong> | Min SDK: <strong>API 26</strong></div>
+        <div class="substep">Click Finish and wait for it to load (takes 2–5 minutes first time)</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-top">
+        <div class="step-icon yellow">🔑</div>
+        <div class="step-content">
+          <div class="step-title">Step 2 — Get Your Free AI API Key</div>
+          <div class="step-desc">You'll use <strong>Together AI</strong> — it gives free credits and has a completely free image model. No credit card needed to start.</div>
+        </div>
+      </div>
+      <div class="substeps">
+        <div class="substep">Go to <strong>together.ai</strong> → click Sign Up (use Google login)</div>
+        <div class="substep">After login, go to <strong>Settings → API Keys</strong></div>
+        <div class="substep">Click <strong>"Create API Key"</strong> → give it any name like "GATEApp"</div>
+        <div class="substep"><strong>Copy the key</strong> (starts with "tog-...") and save it in Notepad — you'll need it later</div>
+        <div class="substep">Free model to use: <strong>black-forest-labs/FLUX.1-schnell-free</strong> (0 credits)</div>
+      </div>
+      <div class="code-block">
+        <div class="code-label">Free model you will use</div>
+        <pre><span class="str">black-forest-labs/FLUX.1-schnell-free</span>
+<span class="cm">// This is 100% free, generates 1080×1920 portrait images</span>
+<span class="cm">// No credit card needed, just sign up</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- PHASE 2 -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">Phase 02</div>
+      <div class="phase-title">Configure Your Project</div>
+      <div class="phase-line"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-top">
+        <div class="step-icon orange">📦</div>
+        <div class="step-content">
+          <div class="step-title">Step 3 — Add Libraries (Dependencies)</div>
+          <div class="step-desc">Libraries are pre-written code that help you do tasks like networking and scheduling without writing everything from scratch.</div>
+        </div>
+      </div>
+      <div class="substeps">
+        <div class="substep">In Android Studio, on the left panel find: <strong>Gradle Scripts → build.gradle (Module: app)</strong> → double-click it</div>
+        <div class="substep">Find the <strong>dependencies { }</strong> section and add these 3 lines inside it:</div>
+      </div>
+      <div class="code-block">
+        <div class="code-label">build.gradle (Module: app) — inside dependencies { }</div>
+        <pre><span class="fn">implementation</span> <span class="str">'androidx.work:work-runtime-ktx:2.9.0'</span>   <span class="cm">// Daily scheduling</span>
+<span class="fn">implementation</span> <span class="str">'com.squareup.okhttp3:okhttp:4.12.0'</span>        <span class="cm">// Internet requests</span>
+<span class="fn">implementation</span> <span class="str">'com.google.code.gson:gson:2.10.1'</span>           <span class="cm">// Read JSON responses</span></pre>
+      </div>
+      <div class="substeps">
+        <div class="substep">After adding, click the <strong>"Sync Now"</strong> button that appears at the top → wait for it to finish</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-top">
+        <div class="step-icon blue">🛡️</div>
+        <div class="step-content">
+          <div class="step-title">Step 4 — Add Permissions to Manifest</div>
+          <div class="step-desc">Android requires you to declare what your app needs permission for (internet, setting wallpaper, etc.).</div>
+        </div>
+      </div>
+      <div class="substeps">
+        <div class="substep">In left panel: <strong>app → manifests → AndroidManifest.xml</strong> → double-click</div>
+        <div class="substep">Add these 3 lines just <strong>above</strong> the <code>&lt;application</code> tag:</div>
+      </div>
+      <div class="code-block">
+        <div class="code-label">AndroidManifest.xml — paste above &lt;application tag</div>
+        <pre><span class="tag">&lt;uses-permission</span> <span class="attr">android:name</span>=<span class="str">"android.permission.INTERNET"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;uses-permission</span> <span class="attr">android:name</span>=<span class="str">"android.permission.SET_WALLPAPER"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;uses-permission</span> <span class="attr">android:name</span>=<span class="str">"android.permission.RECEIVE_BOOT_COMPLETED"</span><span class="tag">/&gt;</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- PHASE 3 -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">Phase 03</div>
+      <div class="phase-title">Write the Core Code</div>
+      <div class="phase-line"></div>
+    </div>
+
+    <div class="alert info">
+      <div class="alert-icon">ℹ️</div>
+      <div>All files you create go inside <strong>app → java → com.yourname.gatewallpaper</strong> folder. Right-click that folder → New → Kotlin File/Class → name it.</div>
+    </div>
+
+    <div class="step">
+      <div class="step-top">
+        <div class="step-icon green">🧮</div>
+        <div class="step-content">
+          <div class="step-title">Step 5 — Days Calculator Function</div>
+          <div class="step-desc">This calculates how many days are left between today and <strong>February 1, 2027</strong> (GATE exam date — change year if needed).</div>
+        </div>
+      </div>
+      <div class="substeps">
+        <div class="substep">Open your existing <strong>MainActivity.kt</strong> file</div>
+        <div class="substep">Add this function anywhere inside the class, below <code>onCreate</code>:</div>
+      </div>
+      <div class="code-block">
+        <div class="code-label">MainActivity.kt — add this function</div>
+        <pre><span class="kw">fun</span> <span class="fn">getDaysRemaining</span>(): <span class="fn">Int</span> {
+    <span class="kw">val</span> gateDate = Calendar.<span class="fn">getInstance</span>().<span class="fn">apply</span> {
+        <span class="fn">set</span>(<span class="num">2027</span>, Calendar.FEBRUARY, <span class="num">1</span>)  <span class="cm">// ← Change year if needed</span>
+        <span class="fn">set</span>(Calendar.HOUR_OF_DAY, <span class="num">0</span>)
+        <span class="fn">set</span>(Calendar.MINUTE, <span class="num">0</span>)
+        <span class="fn">set</span>(Calendar.SECOND, <span class="num">0</span>)
+    }
+    <span class="kw">val</span> today = Calendar.<span class="fn">getInstance</span>()
+    <span class="kw">val</span> diffMs = gateDate.timeInMillis - today.timeInMillis
+    <span class="kw">return</span> maxOf(<span class="num">0</span>, (diffMs / (<span class="num">1000</span> * <span class="num">60</span> * <span class="num">60</span> * <span class="num">24</span>)).<span class="fn">toInt</span>())
+}</pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-top">
+        <div class="step-icon purple">🤖</div>
+        <div class="step-content">
+          <div class="step-title">Step 6 — Create the AI Image Generator</div>
+          <div class="step-desc">This file talks to Together AI, sends a prompt, and downloads the generated image as a Bitmap (image object in Android).</div>
+        </div>
+      </div>
+      <div class="substeps">
+        <div class="substep">Right-click your package folder → <strong>New → Kotlin File/Class</strong> → name it <strong>ImageGenerator</strong></div>
+        <div class="substep">Paste the full code below. Replace <strong>YOUR_API_KEY_HERE</strong> with your actual key from Step 2:</div>
+      </div>
+      <div class="code-block">
+        <div class="code-label">ImageGenerator.kt — new file</div>
+        <pre><span class="kw">import</span> android.graphics.Bitmap
+<span class="kw">import</span> android.graphics.BitmapFactory
+<span class="kw">import</span> android.util.Base64
+<span class="kw">import</span> okhttp3.*
+<span class="kw">import</span> okhttp3.MediaType.Companion.toMediaType
+<span class="kw">import</span> okhttp3.RequestBody.Companion.toRequestBody
+<span class="kw">import</span> org.json.JSONObject
+
+<span class="kw">object</span> ImageGenerator {
+
+    <span class="kw">private const val</span> API_KEY = <span class="str">"YOUR_API_KEY_HERE"</span>  <span class="cm">// ← Paste your key here</span>
+    <span class="kw">private const val</span> API_URL = <span class="str">"https://api.together.xyz/v1/images/generations"</span>
+    <span class="kw">private const val</span> MODEL = <span class="str">"black-forest-labs/FLUX.1-schnell-free"</span>
+
+    <span class="kw">fun</span> <span class="fn">generate</span>(days: Int): Bitmap? {
+        <span class="kw">val</span> prompt = <span class="str">"""
+            Motivational dark study background, deep space cosmic theme,
+            glowing engineering diagrams, circuit patterns, soft bokeh lights,
+            dramatic blue and gold tones, no text anywhere, ultra HD,
+            portrait phone wallpaper, cinematic, inspiring atmosphere
+        """</span>.<span class="fn">trimIndent</span>()
+
+        <span class="kw">val</span> jsonBody = JSONObject().<span class="fn">apply</span> {
+            <span class="fn">put</span>(<span class="str">"model"</span>, MODEL)
+            <span class="fn">put</span>(<span class="str">"prompt"</span>, prompt)
+            <span class="fn">put</span>(<span class="str">"width"</span>, <span class="num">1080</span>)
+            <span class="fn">put</span>(<span class="str">"height"</span>, <span class="num">1920</span>)
+            <span class="fn">put</span>(<span class="str">"steps"</span>, <span class="num">4</span>)
+            <span class="fn">put</span>(<span class="str">"response_format"</span>, <span class="str">"b64_json"</span>)
+        }
+
+        <span class="kw">val</span> request = Request.Builder()
+            .<span class="fn">url</span>(API_URL)
+            .<span class="fn">addHeader</span>(<span class="str">"Authorization"</span>, <span class="str">"Bearer $API_KEY"</span>)
+            .<span class="fn">post</span>(jsonBody.<span class="fn">toString</span>()
+                .<span class="fn">toRequestBody</span>(<span class="str">"application/json"</span>.<span class="fn">toMediaType</span>()))
+            .<span class="fn">build</span>()
+
+        <span class="kw">return try</span> {
+            <span class="kw">val</span> response = OkHttpClient().<span class="fn">newCall</span>(request).<span class="fn">execute</span>()
+            <span class="kw">val</span> body = response.body?.<span class="fn">string</span>() ?: <span class="kw">return null</span>
+            <span class="kw">val</span> b64 = JSONObject(body)
+                .<span class="fn">getJSONArray</span>(<span class="str">"data"</span>)
+                .<span class="fn">getJSONObject</span>(<span class="num">0</span>)
+                .<span class="fn">getString</span>(<span class="str">"b64_json"</span>)
+            <span class="kw">val</span> bytes = Base64.<span class="fn">decode</span>(b64, Base64.DEFAULT)
+            BitmapFactory.<span class="fn">decodeByteArray</span>(bytes, <span class="num">0</span>, bytes.size)
+        } <span class="kw">catch</span> (e: Exception) {
+            e.<span class="fn">printStackTrace</span>()
+            <span class="kw">null</span>
+        }
+    }
+}</pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-top">
+        <div class="step-icon orange">✏️</div>
+        <div class="step-content">
+          <div class="step-title">Step 7 — Create the Text Overlay</div>
+          <div class="step-desc">This draws the countdown number and "days remaining · GATE" text on top of the AI image.</div>
+        </div>
+      </div>
+      <div class="substeps">
+        <div class="substep">Create a new file → name it <strong>WallpaperComposer</strong></div>
+        <div class="substep">Paste the code below:</div>
+      </div>
+      <div class="code-block">
+        <div class="code-label">WallpaperComposer.kt — new file</div>
+        <pre><span class="kw">import</span> android.graphics.*
+
+<span class="kw">object</span> WallpaperComposer {
+
+    <span class="kw">fun</span> <span class="fn">compose</span>(base: Bitmap, days: Int): Bitmap {
+        <span class="kw">val</span> result = base.<span class="fn">copy</span>(Bitmap.Config.ARGB_8888, <span class="kw">true</span>)
+        <span class="kw">val</span> canvas = Canvas(result)
+        <span class="kw">val</span> w = result.width.<span class="fn">toFloat</span>()
+        <span class="kw">val</span> h = result.height.<span class="fn">toFloat</span>()
+
+        <span class="cm">// Dark overlay in center zone</span>
+        Paint().<span class="fn">apply</span> {
+            color = Color.<span class="fn">argb</span>(<span class="num">160</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>)
+        }.<span class="fn">also</span> { canvas.<span class="fn">drawRect</span>(<span class="num">0f</span>, h*<span class="num">0.50f</span>, w, h*<span class="num">0.80f</span>, <span class="kw">it</span>) }
+
+        <span class="cm">// Big day number</span>
+        Paint().<span class="fn">apply</span> {
+            color = Color.WHITE
+            textSize = <span class="num">240f</span>
+            typeface = Typeface.<span class="fn">create</span>(Typeface.DEFAULT, Typeface.BOLD)
+            textAlign = Paint.Align.CENTER
+            <span class="fn">setShadowLayer</span>(<span class="num">30f</span>, <span class="num">0f</span>, <span class="num">0f</span>, Color.<span class="fn">parseColor</span>(<span class="str">"#00D4FF"</span>))
+        }.<span class="fn">also</span> { canvas.<span class="fn">drawText</span>(<span class="str">"$days"</span>, w/<span class="num">2f</span>, h*<span class="num">0.66f</span>, <span class="kw">it</span>) }
+
+        <span class="cm">// "DAYS REMAINING" label</span>
+        Paint().<span class="fn">apply</span> {
+            color = Color.<span class="fn">parseColor</span>(<span class="str">"#00D4FF"</span>)
+            textSize = <span class="num">52f</span>
+            typeface = Typeface.<span class="fn">create</span>(Typeface.DEFAULT, Typeface.BOLD)
+            textAlign = Paint.Align.CENTER
+            letterSpacing = <span class="num">0.15f</span>
+        }.<span class="fn">also</span> { canvas.<span class="fn">drawText</span>(<span class="str">"DAYS REMAINING"</span>, w/<span class="num">2f</span>, h*<span class="num">0.73f</span>, <span class="kw">it</span>) }
+
+        <span class="cm">// "TO GATE EXAM" label</span>
+        Paint().<span class="fn">apply</span> {
+            color = Color.<span class="fn">argb</span>(<span class="num">200</span>, <span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>)
+            textSize = <span class="num">36f</span>
+            textAlign = Paint.Align.CENTER
+            letterSpacing = <span class="num">0.2f</span>
+        }.<span class="fn">also</span> { canvas.<span class="fn">drawText</span>(<span class="str">"TO GATE EXAM"</span>, w/<span class="num">2f</span>, h*<span class="num">0.77f</span>, <span class="kw">it</span>) }
+
+        <span class="kw">return</span> result
+    }
+}</pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-top">
+        <div class="step-icon blue">⚙️</div>
+        <div class="step-content">
+          <div class="step-title">Step 8 — Create the Background Worker</div>
+          <div class="step-desc">This is the most important file. It runs every day automatically, calls the image generator, adds text, and sets the wallpaper — all in the background while you sleep.</div>
+        </div>
+      </div>
+      <div class="substeps">
+        <div class="substep">Create new file → name it <strong>WallpaperWorker</strong></div>
+      </div>
+      <div class="code-block">
+        <div class="code-label">WallpaperWorker.kt — new file</div>
+        <pre><span class="kw">import</span> android.app.WallpaperManager
+<span class="kw">import</span> android.content.Context
+<span class="kw">import</span> androidx.work.*
+<span class="kw">import</span> java.util.Calendar
+
+<span class="kw">class</span> WallpaperWorker(
+    <span class="kw">private val</span> ctx: Context,
+    params: WorkerParameters
+) : Worker(ctx, params) {
+
+    <span class="kw">override fun</span> <span class="fn">doWork</span>(): Result {
+        <span class="kw">return try</span> {
+            <span class="cm">// 1. Calculate days</span>
+            <span class="kw">val</span> days = <span class="fn">getDaysRemaining</span>()
+
+            <span class="cm">// 2. Generate AI image</span>
+            <span class="kw">val</span> bitmap = ImageGenerator.<span class="fn">generate</span>(days)
+                ?: <span class="kw">return</span> Result.<span class="fn">retry</span>()  <span class="cm">// Retry if generation fails</span>
+
+            <span class="cm">// 3. Add countdown text overlay</span>
+            <span class="kw">val</span> finalBitmap = WallpaperComposer.<span class="fn">compose</span>(bitmap, days)
+
+            <span class="cm">// 4. Set as wallpaper</span>
+            <span class="kw">val</span> manager = WallpaperManager.<span class="fn">getInstance</span>(ctx)
+            manager.<span class="fn">setBitmap</span>(finalBitmap)
+
+            Result.<span class="fn">success</span>()
+        } <span class="kw">catch</span> (e: Exception) {
+            e.<span class="fn">printStackTrace</span>()
+            Result.<span class="fn">retry</span>()
+        }
+    }
+
+    <span class="kw">private fun</span> <span class="fn">getDaysRemaining</span>(): Int {
+        <span class="kw">val</span> gateDate = Calendar.<span class="fn">getInstance</span>().<span class="fn">apply</span> {
+            <span class="fn">set</span>(<span class="num">2027</span>, Calendar.FEBRUARY, <span class="num">1</span>)
+        }
+        <span class="kw">val</span> diff = gateDate.timeInMillis - System.<span class="fn">currentTimeMillis</span>()
+        <span class="kw">return</span> maxOf(<span class="num">0</span>, (diff / (<span class="num">1000L</span> * <span class="num">60</span> * <span class="num">60</span> * <span class="num">24</span>)).<span class="fn">toInt</span>())
+    }
+}</pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-top">
+        <div class="step-icon green">🚀</div>
+        <div class="step-content">
+          <div class="step-title">Step 9 — Update MainActivity to Schedule the Worker</div>
+          <div class="step-desc">This starts the daily job when you open the app for the first time. After that, it runs on its own every day at midnight.</div>
+        </div>
+      </div>
+      <div class="code-block">
+        <div class="code-label">MainActivity.kt — replace your onCreate with this</div>
+        <pre><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
+<span class="kw">import</span> android.os.Bundle
+<span class="kw">import</span> android.widget.Button
+<span class="kw">import</span> android.widget.TextView
+<span class="kw">import</span> androidx.work.*
+<span class="kw">import</span> java.util.Calendar
+<span class="kw">import</span> java.util.concurrent.TimeUnit
+
+<span class="kw">class</span> MainActivity : AppCompatActivity() {
+
+    <span class="kw">override fun</span> <span class="fn">onCreate</span>(savedInstanceState: Bundle?) {
+        <span class="kw">super</span>.<span class="fn">onCreate</span>(savedInstanceState)
+        <span class="fn">setContentView</span>(R.layout.activity_main)
+
+        <span class="cm">// Show days remaining on screen</span>
+        <span class="kw">val</span> days = <span class="fn">getDaysRemaining</span>()
+        <span class="fn">findViewById</span>&lt;TextView&gt;(R.id.tvDays).<span class="fn">apply</span> {
+            text = <span class="str">"$days days to GATE"</span>
+        }
+
+        <span class="cm">// Button: run immediately to test</span>
+        <span class="fn">findViewById</span>&lt;Button&gt;(R.id.btnSetNow).<span class="fn">setOnClickListener</span> {
+            <span class="kw">val</span> oneTimeWork = OneTimeWorkRequestBuilder&lt;WallpaperWorker&gt;().<span class="fn">build</span>()
+            WorkManager.<span class="fn">getInstance</span>(<span class="kw">this</span>).<span class="fn">enqueue</span>(oneTimeWork)
+        }
+
+        <span class="cm">// Schedule daily at midnight</span>
+        <span class="fn">scheduleDailyWallpaper</span>()
+    }
+
+    <span class="kw">private fun</span> <span class="fn">scheduleDailyWallpaper</span>() {
+        <span class="kw">val</span> delay = <span class="fn">getDelayUntilMidnight</span>()
+        <span class="kw">val</span> dailyWork = PeriodicWorkRequestBuilder&lt;WallpaperWorker&gt;(
+            <span class="num">1</span>, TimeUnit.DAYS
+        ).<span class="fn">setInitialDelay</span>(delay, TimeUnit.MILLISECONDS).<span class="fn">build</span>()
+
+        WorkManager.<span class="fn">getInstance</span>(<span class="kw">this</span>).<span class="fn">enqueueUniquePeriodicWork</span>(
+            <span class="str">"gate_wallpaper"</span>,
+            ExistingPeriodicWorkPolicy.KEEP,
+            dailyWork
+        )
+    }
+
+    <span class="kw">private fun</span> <span class="fn">getDelayUntilMidnight</span>(): Long {
+        <span class="kw">val</span> midnight = Calendar.<span class="fn">getInstance</span>().<span class="fn">apply</span> {
+            <span class="fn">add</span>(Calendar.DAY_OF_YEAR, <span class="num">1</span>)
+            <span class="fn">set</span>(Calendar.HOUR_OF_DAY, <span class="num">0</span>)
+            <span class="fn">set</span>(Calendar.MINUTE, <span class="num">0</span>)
+            <span class="fn">set</span>(Calendar.SECOND, <span class="num">0</span>)
+        }
+        <span class="kw">return</span> midnight.timeInMillis - System.<span class="fn">currentTimeMillis</span>()
+    }
+
+    <span class="kw">private fun</span> <span class="fn">getDaysRemaining</span>(): Int {
+        <span class="kw">val</span> gateDate = Calendar.<span class="fn">getInstance</span>().<span class="fn">apply</span> {
+            <span class="fn">set</span>(<span class="num">2027</span>, Calendar.FEBRUARY, <span class="num">1</span>)
+        }
+        <span class="kw">val</span> diff = gateDate.timeInMillis - System.<span class="fn">currentTimeMillis</span>()
+        <span class="kw">return</span> maxOf(<span class="num">0</span>, (diff / (<span class="num">1000L</span> * <span class="num">60</span> * <span class="num">60</span> * <span class="num">24</span>)).<span class="fn">toInt</span>())
+    }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- PHASE 4 -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">Phase 04</div>
+      <div class="phase-title">Design the UI Screen</div>
+      <div class="phase-line"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-top">
+        <div class="step-icon purple">🎨</div>
+        <div class="step-content">
+          <div class="step-title">Step 10 — Update the Layout XML</div>
+          <div class="step-desc">This is what users see when they open the app — a simple screen showing days left and a button to test the wallpaper immediately.</div>
+        </div>
+      </div>
+      <div class="substeps">
+        <div class="substep">Open: <strong>app → res → layout → activity_main.xml</strong></div>
+        <div class="substep">Replace everything in it with the code below:</div>
+      </div>
+      <div class="code-block">
+        <div class="code-label">activity_main.xml — replace entire file</div>
+        <pre><span class="tag">&lt;LinearLayout</span>
+    <span class="attr">xmlns:android</span>=<span class="str">"http://schemas.android.com/apk/res/android"</span>
+    <span class="attr">android:layout_width</span>=<span class="str">"match_parent"</span>
+    <span class="attr">android:layout_height</span>=<span class="str">"match_parent"</span>
+    <span class="attr">android:orientation</span>=<span class="str">"vertical"</span>
+    <span class="attr">android:gravity</span>=<span class="str">"center"</span>
+    <span class="attr">android:background</span>=<span class="str">"#080C14"</span>
+    <span class="attr">android:padding</span>=<span class="str">"32dp"</span><span class="tag">&gt;</span>
+
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:id</span>=<span class="str">"@+id/tvDays"</span>
+        <span class="attr">android:layout_width</span>=<span class="str">"wrap_content"</span>
+        <span class="attr">android:layout_height</span>=<span class="str">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="str">"Loading..."</span>
+        <span class="attr">android:textColor</span>=<span class="str">"#00D4FF"</span>
+        <span class="attr">android:textSize</span>=<span class="str">"32sp"</span>
+        <span class="attr">android:textStyle</span>=<span class="str">"bold"</span>
+        <span class="attr">android:gravity</span>=<span class="str">"center"</span>
+        <span class="attr">android:layout_marginBottom</span>=<span class="str">"16dp"</span><span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:layout_width</span>=<span class="str">"wrap_content"</span>
+        <span class="attr">android:layout_height</span>=<span class="str">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="str">"Wallpaper updates daily at midnight"</span>
+        <span class="attr">android:textColor</span>=<span class="str">"#6B7F99"</span>
+        <span class="attr">android:textSize</span>=<span class="str">"14sp"</span>
+        <span class="attr">android:layout_marginBottom</span>=<span class="str">"40dp"</span><span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;Button</span>
+        <span class="attr">android:id</span>=<span class="str">"@+id/btnSetNow"</span>
+        <span class="attr">android:layout_width</span>=<span class="str">"wrap_content"</span>
+        <span class="attr">android:layout_height</span>=<span class="str">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="str">"Set Wallpaper Now (Test)"</span>
+        <span class="attr">android:backgroundTint</span>=<span class="str">"#00D4FF"</span>
+        <span class="attr">android:textColor</span>=<span class="str">"#080C14"</span>
+        <span class="attr">android:textStyle</span>=<span class="str">"bold"</span>
+        <span class="attr">android:padding</span>=<span class="str">"14dp"</span><span class="tag">/&gt;</span>
+
+<span class="tag">&lt;/LinearLayout&gt;</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- PHASE 5 -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">Phase 05</div>
+      <div class="phase-title">Test & Install on Your Phone</div>
+      <div class="phase-line"></div>
+    </div>
+
+    <div class="alert warn">
+      <div class="alert-icon">⚠️</div>
+      <div>Do this step on a real Android phone, not an emulator. The wallpaper feature works better on a real device.</div>
+    </div>
+
+    <div class="step">
+      <div class="step-top">
+        <div class="step-icon yellow">📱</div>
+        <div class="step-content">
+          <div class="step-title">Step 11 — Enable Developer Mode on Your Phone</div>
+          <div class="step-desc">This lets Android Studio install apps directly on your phone via USB.</div>
+        </div>
+      </div>
+      <div class="substeps">
+        <div class="substep">Go to <strong>Settings → About Phone</strong></div>
+        <div class="substep">Tap <strong>Build Number 7 times</strong> repeatedly — you'll see "Developer mode enabled"</div>
+        <div class="substep">Go back to Settings → now you'll see <strong>Developer Options</strong></div>
+        <div class="substep">Inside Developer Options → turn on <strong>USB Debugging</strong></div>
+        <div class="substep">Connect your phone to PC via USB cable → tap <strong>Allow</strong> on the popup</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-top">
+        <div class="step-icon green">▶️</div>
+        <div class="step-content">
+          <div class="step-title">Step 12 — Build & Run the App</div>
+          <div class="step-desc">This compiles all your code and installs it on your phone.</div>
+        </div>
+      </div>
+      <div class="substeps">
+        <div class="substep">In Android Studio, at the top you'll see a <strong>device dropdown</strong> — select your phone name</div>
+        <div class="substep">Click the <strong>Green Play ▶ button</strong> (or press Shift+F10)</div>
+        <div class="substep">Wait 1–2 minutes for it to build and install</div>
+        <div class="substep">Your phone will open the app automatically</div>
+        <div class="substep">You'll see the days remaining displayed on screen</div>
+        <div class="substep">Click <strong>"Set Wallpaper Now (Test)"</strong> to test it immediately</div>
+        <div class="substep">Wait 30–60 seconds (AI image is generating) → check your wallpaper!</div>
+      </div>
+    </div>
+
+    <div class="alert success">
+      <div class="alert-icon">✅</div>
+      <div>After the first test works, the daily schedule is already set. You don't need to open the app again. Every midnight it will auto-generate a new wallpaper and update it for you.</div>
+    </div>
+  </div>
+
+  <!-- QUICK REFERENCE TABLE -->
+  <div class="divider"></div>
+
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num">Quick Ref</div>
+      <div class="phase-title">Summary & Checklist</div>
+      <div class="phase-line"></div>
+    </div>
+
+    <table class="summary-table">
+      <tr>
+        <th>Item</th>
+        <th>Detail</th>
+        <th>Cost</th>
+      </tr>
+      <tr>
+        <td>Android Studio</td>
+        <td>developer.android.com/studio</td>
+        <td><span class="tag-pill free">FREE</span></td>
+      </tr>
+      <tr>
+        <td>Together AI Account</td>
+        <td>together.ai → Sign Up</td>
+        <td><span class="tag-pill free">FREE</span></td>
+      </tr>
+      <tr>
+        <td>AI Image Model</td>
+        <td>black-forest-labs/FLUX.1-schnell-free</td>
+        <td><span class="tag-pill free">FREE</span></td>
+      </tr>
+      <tr>
+        <td>GATE Date (change if needed)</td>
+        <td>February 1, 2027 → set(2027, Calendar.FEBRUARY, 1)</td>
+        <td><span class="tag-pill easy">EDIT</span></td>
+      </tr>
+      <tr>
+        <td>Total Files to Create</td>
+        <td>ImageGenerator.kt, WallpaperComposer.kt, WallpaperWorker.kt</td>
+        <td><span class="tag-pill easy">3 FILES</span></td>
+      </tr>
+      <tr>
+        <td>Files to Modify</td>
+        <td>MainActivity.kt, activity_main.xml, AndroidManifest.xml, build.gradle</td>
+        <td><span class="tag-pill easy">4 FILES</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <footer>
+    Built for <span>GATE aspirants</span> who stay motivated every single day &nbsp;·&nbsp; All the best 🎯
+  </footer>
+
+</div>
+
+<script>
+  // Live countdown
+  function updateCountdown() {
+    const gate = new Date('2027-02-01');
+    const now = new Date();
+    const diff = Math.floor((gate - now) / (1000 * 60 * 60 * 24));
+    document.getElementById('days-live').textContent = diff + ' days';
+  }
+  updateCountdown();
+</script>
+
+</body>
+</html>
