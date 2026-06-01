@@ -15,7 +15,7 @@
 
 The GATE 2027 Countdown app is not just a timer; it’s a daily driver for your success. Every time you unlock your phone, you are reminded exactly how much time you have left to prepare, pushing you to make every second count. 
 
-![Promotional Image](AppStoreAssets/promo_graphic.png)
+
 
 ## ✨ Features
 - 🔥 **Always Visible:** Replaces your wallpaper with a beautiful, dynamic countdown.
