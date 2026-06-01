@@ -24,7 +24,7 @@ git init
 git add .
 git commit -m "Initial GATE wallpaper Android app"
 git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+git remote add origin https://github.com/Pk-Boss99/GATE2027_Remainder.git
 git push -u origin main
 ```
 
