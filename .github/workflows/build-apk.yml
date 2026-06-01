@@ -1,3 +1,5 @@
+Please fix the indentation and formatting errors in my GitHub Actions workflow file:
+
 name: Build APK
 
 on:
@@ -28,8 +30,10 @@ jobs:
 
       - name: Make Gradle executable
         run: chmod +x ./gradlew
-
+        
       - name: Build and test
+        env:
+          GRADLE_OPTS: -Xmx2g
         run: ./gradlew testDebugUnitTest assembleDebug
 
       - name: Upload APK
