@@ -1,45 +1,49 @@
-# GATE Wallpaper
+<div align="center">
+  <img src="AppStoreAssets/app_icon.png" width="150" alt="GATE 2027 Logo">
+  <h1>GATE 2027 Countdown</h1>
+  <p><strong>A motivational daily countdown live wallpaper app for GATE 2027 aspirants.</strong></p>
 
-Native Kotlin Android app that generates a motivational GATE countdown wallpaper and updates it daily.
+  <a href="https://github.com/Pk-Boss99/GATE2027_Remainder/releases/latest">
+    <img src="https://img.shields.io/badge/Download-APK-brightgreen?style=for-the-badge&logo=android" alt="Download APK">
+  </a>
+</div>
 
-## Build APK on GitHub
+---
 
-1. Push this project to a GitHub repository.
-2. Open the repository on GitHub.
-3. Go to `Actions > Build APK > Run workflow`.
-4. After the workflow finishes, download `gate-wallpaper-debug-apk` from the workflow run artifacts.
+## 🚀 Overview
+**Crushing the GATE 2027 exam requires daily focus and unbreakable motivation.** 
 
-The APK path inside the artifact is:
+The GATE 2027 Countdown app is not just a timer; it’s a daily driver for your success. Every time you unlock your phone, you are reminded exactly how much time you have left to prepare, pushing you to make every second count. 
 
-```text
-app-debug.apk
-```
+![Promotional Image](AppStoreAssets/promo_graphic.png)
 
-## Push to GitHub
+## ✨ Features
+- 🔥 **Always Visible:** Replaces your wallpaper with a beautiful, dynamic countdown.
+- 📅 **Daily Updates:** The days tick down automatically, keeping the urgency alive.
+- 💡 **Motivational Aesthetic:** Designed with premium graphics to inspire hard work.
+- 🔋 **Battery Efficient:** Extremely lightweight, so it won’t drain your phone while you study.
 
-From this folder:
+## 📱 Screenshots
 
-```powershell
-git init
-git add .
-git commit -m "Initial GATE wallpaper Android app"
-git branch -M main
-git remote add origin https://github.com/Pk-Boss99/GATE2027_Remainder.git
-git push -u origin main
-```
+<p align="center">
+  <img src="AppStoreAssets/screenshot_1.png" width="30%" />
+  <img src="AppStoreAssets/screenshot_2.png" width="30%" />
+  <img src="AppStoreAssets/screenshot_3.png" width="30%" />
+</p>
 
-Do not commit `local.properties`; it is ignored because it contains machine-specific Android SDK paths.
+---
 
-## Local Build
+## 💻 For Developers
 
-If you build locally, create `local.properties` with:
+### Local Build
+To build this project locally, ensure you have Android Studio installed. 
 
+Create a `local.properties` file in the root directory and specify your SDK path:
 ```properties
 sdk.dir=your_android_sdk_path
 ```
 
-Then run:
-
+Then build the debug APK:
 ```powershell
 .\gradlew.bat testDebugUnitTest assembleDebug
 ```

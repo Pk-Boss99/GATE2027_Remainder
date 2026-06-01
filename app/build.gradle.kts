@@ -9,6 +9,15 @@ android {
     namespace = "com.pushk.gatewallpaper"
     compileSdk = 35
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("release.keystore")
+            storePassword = "wallpaper123"
+            keyAlias = "wallpaper_key"
+            keyPassword = "wallpaper123"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.pushk.gatewallpaper"
         minSdk = 26
@@ -17,6 +26,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
+        }
     }
 
     compileOptions {
