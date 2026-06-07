@@ -8,10 +8,11 @@ import kotlin.random.Random
 
 object WallpaperSetter {
     suspend fun setFreshWallpaper(context: Context): Boolean {
-        val days = CountdownCalculator.daysRemaining()
+        val days = CountdownCalculator.daysRemaining(context)
+        val examName = ExamRepository.getExamName(context)
         val seed = nextSeed(context)
         val generated = ImageGenerator.generate(days, seed) ?: return false
-        val wallpaper = WallpaperComposer.compose(generated, days)
+        val wallpaper = WallpaperComposer.compose(generated, days, examName)
 
         return withContext(Dispatchers.IO) {
             try {

@@ -7,7 +7,7 @@ import android.graphics.Paint
 import android.graphics.Typeface
 
 object WallpaperComposer {
-    fun compose(base: Bitmap, days: Int): Bitmap {
+    fun compose(base: Bitmap, days: Int, examName: String): Bitmap {
         val scaledBase = Bitmap.createScaledBitmap(base, 1080, 1920, true)
         val result = scaledBase.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(result)
@@ -39,7 +39,7 @@ object WallpaperComposer {
             textSize = 36f
             textAlign = Paint.Align.CENTER
             letterSpacing = 0.2f
-        }.also { canvas.drawText("TO GATE EXAM", w / 2f, h * 0.77f, it) }
+        }.also { canvas.drawText("TO ${examName.uppercase()} EXAM", w / 2f, h * 0.77f, it) }
 
         return result
     }

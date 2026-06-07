@@ -38,6 +38,29 @@
         android:textColor="@color/gate_bg"
         android:textStyle="bold" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnChangeExam"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Change Exam"
+            android:textColor="@color/gate_cyan" />
+
+        <Button
+            android:id="@+id/btnChangeDate"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Change Date"
+            android:textColor="@color/gate_cyan" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/tvCredit"
         android:layout_width="wrap_content"
