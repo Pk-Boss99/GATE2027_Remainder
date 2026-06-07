@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import kotlinx.coroutines.MainScope
@@ -48,6 +49,18 @@ class MainActivity : Activity() {
 
         findViewById<Button>(R.id.btnChangeDate).setOnClickListener {
             showDatePicker(ExamRepository.getExamName(this), ExamRepository.getExamDate(this))
+        }
+
+        findViewById<TextView>(R.id.btnMenu).setOnClickListener { view ->
+            val popup = PopupMenu(this, view)
+            popup.menu.add("Check for Updates")
+            popup.setOnMenuItemClickListener {
+                if (it.title == "Check for Updates") {
+                    UpdateManager.checkForUpdates(this@MainActivity)
+                }
+                true
+            }
+            popup.show()
         }
     }
 
