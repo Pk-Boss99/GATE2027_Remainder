@@ -36,7 +36,7 @@ object UpdateManager {
                 var currentVersion = context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "1.0"
                 if (!currentVersion.startsWith("v")) currentVersion = "v$currentVersion"
                 
-                if (latestVersion != currentVersion && latestVersion.isNotEmpty()) {
+                if (latestVersion.isNotEmpty() && isVersionGreater(latestVersion, currentVersion)) {
                     showUpdateDialog(context, latestVersion, apkUrl)
                 } else {
                     Toast.makeText(context, "You are on the latest version!", Toast.LENGTH_SHORT).show()
@@ -82,6 +82,23 @@ object UpdateManager {
             }
             null
         }
+    }
+
+    private fun isVersionGreater(latest: String, current: String): Boolean {
+        try {
+            val l = latest.replace("v", "", ignoreCase = true).split(".").map { it.toIntOrNull() ?: 0 }
+            val c = current.replace("v", "", ignoreCase = true).split(".").map { it.toIntOrNull() ?: 0 }
+            val length = maxOf(l.size, c.size)
+            for (i in 0 until length) {
+                val latestPart = l.getOrElse(i) { 0 }
+                val currentPart = c.getOrElse(i) { 0 }
+                if (latestPart > currentPart) return true
+                if (latestPart < currentPart) return false
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return false
     }
 
     private fun showUpdateDialog(context: Context, newVersion: String, apkUrl: String) {
