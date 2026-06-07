@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="AppStoreAssets/app_icon.png" width="150" alt="GATE 2027 Logo">
-  <h1>GATE 2027 Countdown</h1>
-  <p><strong>A motivational daily countdown live wallpaper app for GATE 2027 aspirants.</strong></p>
+  <img src="AppStoreAssets/app_icon.png" width="150" alt="Exam Countdown Wallpaper Logo">
+  <h1>Exam Countdown Wallpaper</h1>
+  <p><strong>A motivational daily countdown live wallpaper app for major competitive exams.</strong></p>
 
   <a href="https://github.com/Pk-Boss99/GATE2027_Remainder/releases/latest">
     <img src="https://img.shields.io/badge/Download-APK-brightgreen?style=for-the-badge&logo=android" alt="Download APK">
@@ -11,16 +11,16 @@
 ---
 
 ## 🚀 Overview
-**Crushing the GATE 2027 exam requires daily focus and unbreakable motivation.** 
+**Crushing competitive exams requires daily focus and unbreakable motivation.** 
 
-The GATE 2027 Countdown app is not just a timer; it’s a daily driver for your success. Every time you unlock your phone, you are reminded exactly how much time you have left to prepare, pushing you to make every second count. 
-
-
+The Exam Countdown Wallpaper app is not just a timer; it’s a daily driver for your success. Every time you unlock your phone, you are reminded exactly how much time you have left to prepare, pushing you to make every second count. 
 
 ## ✨ Features
-- 🔥 **Always Visible:** Replaces your wallpaper with a beautiful, dynamic countdown.
+- 🔥 **Always Visible:** Replaces your wallpaper with a beautiful, dynamic countdown to your exam.
+- 🎯 **Multi-Exam Support:** Choose from pre-configured popular exams (UPSC, NEET, IIT-JEE, GATE) or create a Custom Exam.
+- 🇮🇳 **Indian Exam Database:** Instantly detects the dates for 25+ major Indian competitive exams without needing an internet connection.
+- 🔄 **In-App Updater:** Automatically detects and downloads new releases right from GitHub directly inside the app!
 - 📅 **Daily Updates:** The days tick down automatically, keeping the urgency alive.
-- 💡 **Motivational Aesthetic:** Designed with premium graphics to inspire hard work.
 - 🔋 **Battery Efficient:** Extremely lightweight, so it won’t drain your phone while you study.
 
 ## 📱 Screenshots
