@@ -33,7 +33,7 @@ object UpdateManager {
 
             if (updateInfo != null) {
                 val (latestVersion, apkUrl) = updateInfo
-                var currentVersion = context.packageManager.getPackageInfo(context.packageName, 0).versionName
+                var currentVersion = context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "1.0"
                 if (!currentVersion.startsWith("v")) currentVersion = "v$currentVersion"
                 
                 if (latestVersion != currentVersion && latestVersion.isNotEmpty()) {
